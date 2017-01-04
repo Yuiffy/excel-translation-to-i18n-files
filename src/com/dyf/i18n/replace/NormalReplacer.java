@@ -41,8 +41,6 @@ public class NormalReplacer implements Replacer {
 
         StringBuffer sb = new StringBuffer();
         while (matcher.find()) {
-            System.out.println(matcher.groupCount());
-            System.out.println(matcher.group());
             matcher.appendReplacement(sb, tokens.get(matcher.group(1)));
         }
         matcher.appendTail(sb);

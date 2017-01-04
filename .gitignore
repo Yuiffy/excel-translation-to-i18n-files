@@ -1,5 +1,7 @@
 *.xls
 *.json
+!template.json
+!/excels/test_excel.xls
 
 *.class
 
@@ -8,6 +10,7 @@
 
 # Package Files #
 *.jar
+!/lib/*.jar
 *.war
 *.ear
 
