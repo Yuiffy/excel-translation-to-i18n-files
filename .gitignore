@@ -1,5 +1,6 @@
 #ignore test files, but template
-/workfiles
+*.xls
+*.json
 !/workfiles/excel2others/excelinput/test_excel.xls
 !/workfiles/excel2others/excelinput/put_xxx.xls_in_this_folder.txt
 !/workfiles/excel2others/templateinput/template.json

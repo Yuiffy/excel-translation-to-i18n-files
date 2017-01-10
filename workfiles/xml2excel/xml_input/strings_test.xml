@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+
+    <string name="app_name">TV</string>
+
+    <string name="search_hint">Search the dictionary</string>
+    <string name="settings_description">Definitions of words</string>
+
+</resources>
