@@ -1,5 +1,6 @@
 package com.dyf.i18n.file;
 import java.io.File;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 

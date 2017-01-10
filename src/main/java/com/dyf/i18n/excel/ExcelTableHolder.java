@@ -1,12 +1,10 @@
 package com.dyf.i18n.excel;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +15,7 @@ import java.util.Map;
  */
 public class ExcelTableHolder implements TableHolder{
     private Sheet sheet;
+    private Workbook workbook;
 
     public ExcelTableHolder(String filename) throws IOException, InvalidFormatException {
         this(new File(filename));
@@ -25,8 +24,13 @@ public class ExcelTableHolder implements TableHolder{
     public ExcelTableHolder(File file) throws IOException, InvalidFormatException {
         InputStream inp = new FileInputStream(file);
         //根据上述创建的输入流 创建工作簿对象
-        Workbook workbook = WorkbookFactory.create(inp);
+        workbook = WorkbookFactory.create(inp);
         sheet = workbook.getSheetAt(0);
+    }
+
+    public ExcelTableHolder(){
+        workbook = new HSSFWorkbook();
+        sheet = workbook.createSheet();
     }
 
     @Override
@@ -86,6 +90,44 @@ public class ExcelTableHolder implements TableHolder{
     @Override
     public Map<String, String> getKeyValueMapByTwoCol(int keyColNum, int valueColNum) {
         return getKeyValueMapByTwoCol(keyColNum, valueColNum, null, null);
+    }
+
+    @Override
+    public void addColumn(String columnTitle, Map<String, String> kvMap, int keyColNum) {
+        Row firstRow = sheet.getRow(0);
+        int colNum = firstRow.getLastCellNum();
+        Cell titleCell = firstRow.createCell(colNum);
+        titleCell.setCellValue(columnTitle);
+        int last = sheet.getLastRowNum();
+        for(int i=1; i<=last; i++){
+            Row row = sheet.getRow(i);
+            String key = row.getCell(keyColNum).getStringCellValue();
+            String value = kvMap.get(key);
+            Cell newCell = row.createCell(colNum);
+            newCell.setCellValue(value);
+        }
+    }
+
+    @Override
+    public void setColumn(String columnTitle, List<String> column, int colNum) {
+        int nowRowNums = sheet.getPhysicalNumberOfRows();
+        int expectedRowNums = 1 + column.size();
+        for(int i=nowRowNums; i<expectedRowNums; i++){
+            sheet.createRow(i);
+        }
+        Row firstRow = sheet.getRow(0);
+        if(firstRow.getCell(colNum)==null)firstRow.createCell(colNum);
+        firstRow.getCell(colNum).setCellValue(columnTitle);
+        for(int i=0; i<column.size(); i++){
+            Row row = sheet.getRow(i+1);
+            if(row.getCell(colNum)==null)row.createCell(colNum);
+            row.getCell(colNum).setCellValue(column.get(i));
+        }
+    }
+
+    @Override
+    public void write(OutputStream outputStream) throws IOException {
+        workbook.write(outputStream);
     }
 
     private List<String> addPrefixSuffix(List<String> keyList, String prefix, String suffix) {

@@ -1,8 +1,10 @@
-*.xls
-*.json
-!template.json
-!/excels/test_excel.xls
-
+#ignore test files, but template
+/workfiles
+!/workfiles/excel2others/excelinput/test_excel.xls
+!/workfiles/excel2others/excelinput/put_xxx.xls_in_this_folder.txt
+!/workfiles/excel2others/templateinput/template.json
+!/workfiles/xml2excel/xml_input/strings_test.xml
+!/workfiles/xml2excel/xml_input/strings_test_CN.xml
 *.class
 
 # Mobile Tools for Java (J2ME)
@@ -30,7 +32,11 @@ release.properties
 dependency-reduced-pom.xml  
 buildNumber.properties  
 .mvn/timing.properties  
-  
+
+# Exclude maven wrapper
+!/.mvn/wrapper/maven-wrapper.jar
+
+
 .idea/  
   
 ## File-based project format:  
@@ -53,5 +59,4 @@ atlassian-ide-plugin.xml
 com_crashlytics_export_strings.xml  
 crashlytics.properties  
 crashlytics-build.properties  
-fabric.properties  
-outputFiles/
+fabric.properties
