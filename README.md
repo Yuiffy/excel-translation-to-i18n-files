@@ -9,6 +9,8 @@
 2.能把一堆xml翻译文件汇总到一个excel里。
 示例：运行com.dyf.i18n.MainXmlToExcel.main
 
+暂时就这些功能。是java maven项目，用IDE导入项目的时候选maven项目就行，我试了eclipse和intellij都行，是不是很稳。
+
 下面是之前写的excel转多个json的英文说明：
 
 input a xls excel table, with multi language translated in it, and input a i18n file template(such as a json), output i18n json files with multi language.
