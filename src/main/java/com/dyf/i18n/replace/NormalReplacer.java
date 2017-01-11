@@ -1,7 +1,5 @@
 package com.dyf.i18n.replace;
 
-import com.sun.deploy.util.StringUtils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +33,7 @@ public class NormalReplacer implements Replacer {
         //do regex escape for value string, because will make keys into patternString
         for (String key : tokens.keySet())
             keyList.add(Pattern.quote(key));
-        String patternString = "(" + StringUtils.join(keyList, "|") + ")";
+        String patternString = "(" + String.join("|",keyList) + ")";
         Pattern pattern = Pattern.compile(patternString);
         Matcher matcher = pattern.matcher(template);
 
