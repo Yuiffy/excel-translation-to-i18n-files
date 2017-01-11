@@ -1,5 +1,6 @@
 package com.dyf.i18n.excel;
 
+import com.dyf.i18n.util.ListStringUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
@@ -77,8 +78,8 @@ public class ExcelTableHolder implements TableHolder{
             System.out.println("size error! " + keyList.size() + " != " + valueList.size());
             return null;
         }
-        keyList = addPrefixSuffix(keyList, prefix, suffix);
-        valueList = addPrefixSuffix(valueList, prefix, suffix);
+        keyList = ListStringUtil.addPrefixSuffix(keyList, prefix, suffix);
+        valueList = ListStringUtil.addPrefixSuffix(valueList, prefix, suffix);
         int siz = keyList.size();
         Map<String, String> mp = new HashMap<>();
         for (int i = 0; i < siz; i++) {
@@ -129,14 +130,4 @@ public class ExcelTableHolder implements TableHolder{
     public void write(OutputStream outputStream) throws IOException {
         workbook.write(outputStream);
     }
-
-    private List<String> addPrefixSuffix(List<String> keyList, String prefix, String suffix) {
-        String pre = prefix == null ? "" : prefix;
-        String suf = suffix == null ? "" : suffix;
-        List<String> ret = new ArrayList<>(keyList.size());
-        for (String k : keyList)
-            ret.add(pre + k + suf);
-        return ret;
-    }
-
 }

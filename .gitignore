@@ -4,6 +4,7 @@
 !/workfiles/excel2others/excelinput/test_excel.xls
 !/workfiles/excel2others/excelinput/put_xxx.xls_in_this_folder.txt
 !/workfiles/excel2others/templateinput/template.json
+!/workfiles/excel2others/templateinput/template.xml
 !/workfiles/xml2excel/xml_input/strings_test.xml
 !/workfiles/xml2excel/xml_input/strings_test_CN.xml
 *.class
@@ -113,3 +114,4 @@ local.properties
 
 # Code Recommenders
 .recommenders/
+

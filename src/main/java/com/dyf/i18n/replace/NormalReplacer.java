@@ -39,7 +39,7 @@ public class NormalReplacer implements Replacer {
 
         StringBuffer sb = new StringBuffer();
         while (matcher.find()) {
-            matcher.appendReplacement(sb, tokens.get(matcher.group(1)));
+            matcher.appendReplacement(sb, Matcher.quoteReplacement(tokens.get(matcher.group(1))));
         }
         matcher.appendTail(sb);
         return sb.toString();

@@ -1,11 +1,17 @@
 {
-	"language": {
-		"title": {
-			"gank_string": "gank",
-			"what":"\"()|what?\""
-		},
-		"key": {
-			"fafa": "farm"
-		}
-	}
+  "language": {
+    "title": {
+      "gank_string": "gank",
+      "what": "\"()|what?\""
+    },
+    "key": {
+      "fafa": "farm"
+    }
+  },
+  "occultic": {
+    "gua": {
+      "eaea_eaea": "oyaya"
+    },
+    "pig": "pig<&"
+  }
 }
