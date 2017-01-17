@@ -16,31 +16,41 @@ public class ListStringUtil {
         String pre = prefix == null ? "" : prefix;
         String suf = suffix == null ? "" : suffix;
         List<String> ret = new ArrayList<>(list.size());
-        list.forEach(item -> ret.add(prefix + item + suffix));
+        for(String item:list){
+            ret.add(prefix + item + suffix);
+        }
         return ret;
     }
 
     static public List<String> escapeXml(List<String> list) {
         List<String> ret = new ArrayList<>(list.size());
-        list.forEach(item -> ret.add(StringEscapeUtils.escapeXml11(item)));
+        for(String item:list){
+            ret.add(StringEscapeUtils.escapeXml11(item));
+        }
         return ret;
     }
 
     static public List<String> unescapeXml(List<String> list) {
         List<String> ret = new ArrayList<>(list.size());
-        list.forEach(item -> ret.add(StringEscapeUtils.unescapeXml(item)));
+        for(String item:list){
+            ret.add(StringEscapeUtils.unescapeXml(item));
+        }
         return ret;
     }
 
     static public List<String> escapeJson(List<String> list) {
         List<String> ret = new ArrayList<>(list.size());
-        list.forEach(item -> ret.add(StringEscapeUtils.escapeJson(item)));
+        for(String item:list){
+            ret.add(StringEscapeUtils.escapeJson(item));
+        }
         return ret;
     }
 
     static public List<String> unescapeJson(List<String> list) {
         List<String> ret = new ArrayList<>(list.size());
-        list.forEach(item -> ret.add(StringEscapeUtils.unescapeJson(item)));
+        for(String item:list){
+            ret.add(StringEscapeUtils.unescapeJson(item));
+        }
         return ret;
     }
 

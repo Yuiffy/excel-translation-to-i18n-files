@@ -12,14 +12,18 @@ public class XmlEscaper implements Escaper{
     @Override
     public List<String> escape(List<String> list) {
         List<String> ret = new ArrayList<>(list.size());
-        list.forEach(item -> ret.add(StringEscapeUtils.escapeXml11(item)));
+        for(String item:list){
+            ret.add(StringEscapeUtils.escapeXml11(item));
+        }
         return ret;
     }
 
     @Override
     public List<String> unescape(List<String> list) {
         List<String> ret = new ArrayList<>(list.size());
-        list.forEach(item -> ret.add(StringEscapeUtils.unescapeXml(item)));
+        for(String item:list){
+            ret.add(StringEscapeUtils.unescapeXml(item));
+        }
         return ret;
     }
 }

@@ -12,14 +12,18 @@ public class JsonEscaper implements Escaper{
     @Override
     public List<String> escape(List<String> list) {
         List<String> ret = new ArrayList<>(list.size());
-        list.forEach(item -> ret.add(StringEscapeUtils.escapeJson(item)));
+        for(String item:list){
+            ret.add(StringEscapeUtils.escapeJson(item));
+        }
         return ret;
     }
 
     @Override
     public List<String> unescape(List<String> list) {
         List<String> ret = new ArrayList<>(list.size());
-        list.forEach(item -> ret.add(StringEscapeUtils.unescapeJson(item)));
+        for(String item:list){
+            ret.add(StringEscapeUtils.unescapeJson(item));
+        }
         return ret;
     }
 }
