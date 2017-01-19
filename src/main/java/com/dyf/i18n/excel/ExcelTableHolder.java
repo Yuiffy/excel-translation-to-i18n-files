@@ -23,7 +23,11 @@ public class ExcelTableHolder implements TableHolder{
     }
 
     public ExcelTableHolder(File file) throws IOException, InvalidFormatException {
-        InputStream inp = new FileInputStream(file);
+        //根据上述创建的输入流 创建工作簿对象
+        this(new FileInputStream(file));
+    }
+
+    public ExcelTableHolder(InputStream inp) throws IOException, InvalidFormatException {
         //根据上述创建的输入流 创建工作簿对象
         workbook = WorkbookFactory.create(inp);
         sheet = workbook.getSheetAt(0);
@@ -129,5 +133,14 @@ public class ExcelTableHolder implements TableHolder{
     @Override
     public void write(OutputStream outputStream) throws IOException {
         workbook.write(outputStream);
+    }
+
+    @Override
+    public void merge(TableHolder other) {
+        List<String> titles = other.getFirstRowString();
+        for(int i=1; i<titles.size(); i++){
+            Map<String,String> kvMap = other.getKeyValueMapByTwoCol(0,i);
+            this.addColumn(titles.get(i),kvMap, 0);
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.dyf.i18n;
 
 import com.dyf.i18n.excel.ExcelTableHolder;
 import com.dyf.i18n.service.FileConvertService;
+import com.dyf.i18n.util.FileType;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import java.io.File;
@@ -36,7 +37,7 @@ public class MainExcelToOthers {
             fileCon.excelToOtherAndOutputToFile(new ExcelTableHolder(xlsfile),
                     new File(templateFilenameString),
                     outputDirString + xlsfile.getName() + "/",
-                    stringPrefix, stringSuffix, "json");
+                    stringPrefix, stringSuffix, FileType.json);
         }
     }
 
@@ -50,7 +51,7 @@ public class MainExcelToOthers {
 
         FileConvertService fileCon = new FileConvertService();
         File excelDir = new File(excelDirString);
-        File[] excelFiles = excelDir.listFiles(new FilenameFilter() {
+        File[] excelFiles =  excelDir.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
                 return name.endsWith(".xls");
@@ -62,7 +63,7 @@ public class MainExcelToOthers {
             fileCon.excelToOtherAndOutputToFile(new ExcelTableHolder(xlsfile),
                     new File(templateFilenameString),
                     outputDirString + xlsfile.getName() + "/",
-                    stringPrefix, stringSuffix, "xml");
+                    stringPrefix, stringSuffix, FileType.xml);
         }
     }
 }
