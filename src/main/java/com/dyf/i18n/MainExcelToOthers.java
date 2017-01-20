@@ -1,7 +1,7 @@
 package com.dyf.i18n;
 
-import com.dyf.i18n.excel.ExcelTableHolder;
 import com.dyf.i18n.service.FileConvertService;
+import com.dyf.i18n.table.ExcelTableHolder;
 import com.dyf.i18n.util.FileType;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
@@ -10,7 +10,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 
 public class MainExcelToOthers {
-    //convert excel to many files like timplate
+    //convert table to many files like timplate
     public static void main(String[] args) throws Exception {
         excel2jsons();
         excel2xmls();

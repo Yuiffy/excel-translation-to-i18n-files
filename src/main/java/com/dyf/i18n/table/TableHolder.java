@@ -1,4 +1,4 @@
-package com.dyf.i18n.excel;
+package com.dyf.i18n.table;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -18,7 +18,7 @@ public interface TableHolder {
 
     Map<String, String> getKeyValueMapByTwoCol(int keyColNum, int valueColNum);
 
-    void addColumn(String columnTitle, Map<String,String> kvMap, int keyColNum);
+    void addColumn(String columnTitle, Map<String, String> kvMap, int keyColNum);
     void setColumn(String columnTitle, List<String> column, int colNum);
     void write(OutputStream outputStream) throws IOException;
     void merge(TableHolder other);

@@ -7,6 +7,6 @@ import java.util.Map;
  */
 public interface Replacer {
     String put(String key, String value);
-    void reset(Map<String,String> kvMap);
+    void reset(Map<String, String> kvMap);
     String doReplace(String template);
 }
