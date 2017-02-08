@@ -19,11 +19,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -32,9 +28,12 @@ import java.util.zip.ZipOutputStream;
  * Created by yuiff on 2017/1/3.
  */
 public class FileConvertService {
-    public int excelToOtherAndOutputToFile(TableHolder tableHolder, File templateFilenameFile, String outputDir, String stringPrefix, String stringSuffix, FileType escapeType) throws IOException, InvalidFormatException {
-        new File(outputDir).mkdirs();
-        String template = new String(Files.readAllBytes(Paths.get(templateFilenameFile.getPath())));
+    public Map<String, String> excelToOthersMap(TableHolder tableHolder, String template, String stringPrefix, String stringSuffix, FileType escapeType) throws IOException, InvalidFormatException {
+        return excelToOthersMap(tableHolder, template, stringPrefix, stringSuffix, escapeType, null);
+    }
+
+    public Map<String, String> excelToOthersMap2(TableHolder tableHolder, String template, String stringPrefix, String stringSuffix, FileType escapeType, Set<String> languageOnly) throws IOException, InvalidFormatException {
+        Map<String, String> ret = new HashMap<>();
         List<String> titles = tableHolder.getFirstRowString();
         Escaper escaper = getEscaper(escapeType);
         List<String> keyList = ListStringUtil.addPrefixSuffix(
@@ -42,21 +41,25 @@ public class FileConvertService {
                         tableHolder.getColStringWithOutFirstRow(0)
                 ), stringPrefix, stringSuffix);
         for (int i = 1; i < titles.size(); i++) {
+            String lang = titles.get(i);
+            if (languageOnly != null && !languageOnly.contains(lang)) continue;
             List<String> valueList = ListStringUtil.addPrefixSuffix(
                     escaper.escape(
                             tableHolder.getColStringWithOutFirstRow(i)
                     ), stringPrefix, stringSuffix);
             Map<String, String> kvMap = ListStringUtil.list2map(keyList, valueList);
 
-            String lang = titles.get(i);
-            String outputFileName = getOutputFileName(templateFilenameFile.getName(), outputDir, lang);
             String outputString = getTranslatedString(template, kvMap);
-            try (PrintWriter out = new PrintWriter(outputFileName)) {
-                out.println(outputString);
-            }
-            System.out.println("output File finish:" + outputFileName);
+            ret.put(lang, outputString);
+            System.out.println("translated finish:" + lang);
         }
-        return 0;
+        return ret;
+    }
+
+
+    public Map<String, String> excelToOthersMap(TableHolder tableHolder, String template, String stringPrefix, String stringSuffix, FileType escapeType, Set<String> languageOnly) throws IOException, InvalidFormatException {
+        Escaper escaper = getEscaper(escapeType);
+        return excelToOthersMap(tableHolder, template, stringPrefix, stringSuffix, escaper, languageOnly);
     }
 
     private Escaper getEscaper(FileType escapeType) {
@@ -95,37 +98,74 @@ public class FileConvertService {
     }
 
     public ByteArrayOutputStream excelToOtherZip(TableHolder tableHolder, String template, String stringPrefix, String stringSuffix, Escaper escaper, String outputFileNamePrefix) throws IOException, InvalidFormatException {
-        TemplateHolder templateHolder = new NormalTemplateHolder(tableHolder,escaper,template,stringPrefix,stringSuffix);
-        List<String> titles = templateHolder.getFirstRowString();
+        return excelToOtherZip(tableHolder, template, stringPrefix, stringSuffix, escaper, outputFileNamePrefix, null);
+    }
+
+    public ByteArrayOutputStream excelToOtherZip(TableHolder tableHolder, String template, String stringPrefix, String stringSuffix, Escaper escaper, String outputFileNamePrefix, Set<String> languageLimit) throws IOException, InvalidFormatException {
+        Map<String, String> textMap = excelToOthersMap(tableHolder, template, stringPrefix, stringSuffix, escaper, languageLimit);
+        ByteArrayOutputStream ret = mapToZip(textMap, outputFileNamePrefix, "." + escaper.getFileExtension(), languageLimit);
+        return ret;
+    }
+
+    public ByteArrayOutputStream excelToOtherZip(List<TableHolder> tableHolders, String template, String stringPrefix, String stringSuffix, Escaper escaper, String outputFileNamePrefix, Set<String> languageLimit) throws IOException, InvalidFormatException {
+        TableHolder tableHolder = null;
+        if (tableHolders != null && tableHolders.size() != 0)
+            tableHolder = tableHolders.get(0);
+        else tableHolder = new ExcelTableHolder();
+        for (int i = 1; i < tableHolders.size(); i++)
+            tableHolder.merge(tableHolders.get(i));
+        Map<String, String> textMap = excelToOthersMap(tableHolder, template, stringPrefix, stringSuffix, escaper, languageLimit);
+        ByteArrayOutputStream ret = mapToZip(textMap, outputFileNamePrefix, "." + escaper.getFileExtension(), languageLimit);
+        return ret;
+    }
+
+    public ByteArrayOutputStream excelToOtherZip(List<TableHolder> tableHolders, String template, String stringPrefix, String stringSuffix, FileType escapeType, String outputFileNamePrefix, Set<String> languageLimit) throws IOException, InvalidFormatException {
+        Escaper escaper = getEscaper(escapeType);
+        return excelToOtherZip(tableHolders, template, stringPrefix, stringSuffix, escaper, outputFileNamePrefix, languageLimit);
+    }
+
+
+    public ByteArrayOutputStream mapToZip(Map<String, String> textMap, String outputFileNamePrefix, String outputFileNameSuffix, Set<String> keyLimit) throws IOException, InvalidFormatException {
         ByteArrayOutputStream bo = new ByteArrayOutputStream();
-        ZipOutputStream zipOut= new ZipOutputStream(bo);
+        ZipOutputStream zipOut = new ZipOutputStream(bo);
         Set<String> nameSet = new HashSet<>();
-        for (int i = 1; i < titles.size(); i++) {
-            String lang = titles.get(i);
-            String outputFileName = outputFileNamePrefix+"_"+lang+"."+escaper.getFileExtension();
-            if(nameSet.contains(outputFileName)){
-                System.out.println("Duplicate file will not output, name:"+outputFileName);
+        for (Map.Entry<String, String> entry : textMap.entrySet()) {
+            String lang = entry.getKey();
+            String outputFileName = outputFileNamePrefix + lang + outputFileNameSuffix;
+            if (nameSet.contains(outputFileName)) {
+                System.out.println("Duplicate file will not output, name:" + outputFileName);
                 continue;
             }
             nameSet.add(outputFileName);
-            String outputString = templateHolder.getRepacedTemplate(i);
-            zipOut.putNextEntry( new ZipEntry(outputFileName));
+            String outputString = entry.getValue();
+            zipOut.putNextEntry(new ZipEntry(outputFileName));
             zipOut.write(outputString.getBytes());
             zipOut.closeEntry();
-//            System.out.println("zip File finish:" + outputFileName);
+            System.out.println("zip File finish:" + outputFileName);
         }
-
-        zipOut.putNextEntry( new ZipEntry("excel.xls"));
-        tableHolder.write(zipOut);
-        zipOut.closeEntry();
-
         zipOut.close();
         return bo;
     }
 
+
+    public Map<String, String> excelToOthersMap(TableHolder tableHolder, String template, String stringPrefix, String stringSuffix, Escaper escaper, Set<String> languageLimit) throws IOException, InvalidFormatException {
+        TemplateHolder templateHolder = new NormalTemplateHolder(tableHolder, escaper, template, stringPrefix, stringSuffix);
+        List<String> titles = templateHolder.getFirstRowString();
+        Map<String, String> ret = new HashMap<>();
+        for (int i = 1; i < titles.size(); i++) {
+            String lang = titles.get(i);
+            if (languageLimit != null && !languageLimit.contains(lang)) continue;
+            if (ret.containsKey(lang)) continue;
+            String outputString = templateHolder.getRepacedTemplate(i);
+            ret.put(lang, outputString);
+            System.out.println("translated:" + lang);
+        }
+        return ret;
+    }
+
     public void ManyXmlToOneExcelFile(ZipInputStream zipInputStream, OutputStream excelOutputStream) throws IOException, SAXException, ParserConfigurationException {
         ZipEntry entry;
-        while((entry = zipInputStream.getNextEntry())!= null) {
+        while ((entry = zipInputStream.getNextEntry()) != null) {
             //TODO
         }
     }

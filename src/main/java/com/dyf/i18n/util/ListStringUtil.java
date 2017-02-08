@@ -1,5 +1,8 @@
 package com.dyf.i18n.util;
 
+import com.dyf.i18n.util.escaper.Escaper;
+import com.dyf.i18n.util.escaper.JsonEscaper;
+import com.dyf.i18n.util.escaper.XmlEscaper;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.util.*;
@@ -23,35 +26,23 @@ public class ListStringUtil {
     }
 
     static public List<String> escapeXml(List<String> list) {
-        List<String> ret = new ArrayList<>(list.size());
-        for(String item:list){
-            ret.add(StringEscapeUtils.escapeXml11(item));
-        }
-        return ret;
+        Escaper escaper = new XmlEscaper();
+        return escaper.escape(list);
     }
 
     static public List<String> unescapeXml(List<String> list) {
-        List<String> ret = new ArrayList<>(list.size());
-        for(String item:list){
-            ret.add(StringEscapeUtils.unescapeXml(item));
-        }
-        return ret;
+        Escaper escaper = new XmlEscaper();
+        return escaper.unescape(list);
     }
 
     static public List<String> escapeJson(List<String> list) {
-        List<String> ret = new ArrayList<>(list.size());
-        for(String item:list){
-            ret.add(StringEscapeUtils.escapeJson(item));
-        }
-        return ret;
+        Escaper escaper = new JsonEscaper();
+        return escaper.escape(list);
     }
 
     static public List<String> unescapeJson(List<String> list) {
-        List<String> ret = new ArrayList<>(list.size());
-        for(String item:list){
-            ret.add(StringEscapeUtils.unescapeJson(item));
-        }
-        return ret;
+        Escaper escaper = new JsonEscaper();
+        return escaper.unescape(list);
     }
 
     static public <K,V> Map<K, V> list2map(List<K> keyList, List<V> valueList) {
