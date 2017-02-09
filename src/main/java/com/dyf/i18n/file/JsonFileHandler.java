@@ -16,7 +16,6 @@ public class JsonFileHandler implements KeyValueFileHandler {
         this.json = JSONObject.fromObject(jsonString);
         this.kvMap = new HashMap<>();
         dfsJson(json);
-        dfsJson(json);
     }
 
 
@@ -40,9 +39,9 @@ public class JsonFileHandler implements KeyValueFileHandler {
             String key = entry.getKey();
             Object data = entry.getValue();
             if (data instanceof String) {
-                String fullKey = parent + ":" + data;
+                String fullKey = parent +"." + key;
                 kvMap.put(fullKey, new JsonObjectSaver(entry));
-                System.out.println(fullKey);
+//                System.out.println(fullKey);
             } else {
                 String childKey = parent.isEmpty() ? key : parent + "." + key;
                 dfsObject(childKey, data);
@@ -56,7 +55,7 @@ public class JsonFileHandler implements KeyValueFileHandler {
             if (data instanceof String) {
                 String fullKey = parent + '[' + i + ']';
                 kvMap.put(fullKey, new JsonArraySaver(json, i));
-                System.out.println(fullKey);
+//                System.out.println(fullKey);
             } else {
                 dfsObject(parent + '[' + i + ']', data);
             }
