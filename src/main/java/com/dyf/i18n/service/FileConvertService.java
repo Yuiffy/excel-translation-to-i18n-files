@@ -96,7 +96,7 @@ public class FileConvertService {
         return ret;
     }
 
-    public ByteArrayOutputStream excelToOtherZip(List<TableHolder> tableHolders, String template, String stringPrefix, String stringSuffix, Escaper escaper, String outputFileNamePrefix, Set<String> languageLimit) throws IOException, InvalidFormatException, ParserConfigurationException, SAXException {
+    public ByteArrayOutputStream excelToOtherZip(List<TableHolder> tableHolders, String template, String stringPrefix, String stringSuffix, Escaper escaper,FileType templateFileType, String outputFileNamePrefix, Set<String> languageLimit) throws IOException, InvalidFormatException, ParserConfigurationException, SAXException {
         TableHolder tableHolder = null;
         if (tableHolders != null && tableHolders.size() != 0) {
             tableHolder = tableHolders.get(0);
@@ -104,7 +104,7 @@ public class FileConvertService {
                 tableHolder.merge(tableHolders.get(i));
         } else tableHolder = new ExcelTableHolder();
 
-        fitRowTitleToTemplate(tableHolder,template,escaper.getFileType());
+        fitRowTitleToTemplate(tableHolder,template,templateFileType);
         Map<String, String> textMap = excelToOthersMap(tableHolder, template, stringPrefix, stringSuffix, escaper, languageLimit);
 
         ByteArrayOutputStream bo = new ByteArrayOutputStream();
@@ -118,9 +118,9 @@ public class FileConvertService {
         return bo;
     }
 
-    public ByteArrayOutputStream excelToOtherZip(List<TableHolder> tableHolders, String template, String stringPrefix, String stringSuffix, FileType escapeType, String outputFileNamePrefix, Set<String> languageLimit) throws IOException, InvalidFormatException, ParserConfigurationException, SAXException {
+    public ByteArrayOutputStream excelToOtherZip(List<TableHolder> tableHolders, String template, String stringPrefix, String stringSuffix, FileType escapeType,FileType templateFitType, String outputFileNamePrefix, Set<String> languageLimit) throws IOException, InvalidFormatException, ParserConfigurationException, SAXException {
         Escaper escaper = EscaperFactory.getEscaper(escapeType);
-        return excelToOtherZip(tableHolders, template, stringPrefix, stringSuffix, escaper, outputFileNamePrefix, languageLimit);
+        return excelToOtherZip(tableHolders, template, stringPrefix, stringSuffix, escaper,templateFitType, outputFileNamePrefix, languageLimit);
     }
 
     public void mapToZip(ZipOutputStream zipOut, Map<String, String> textMap, String outputFileNamePrefix, String outputFileNameSuffix, Set<String> keyLimit) throws IOException, InvalidFormatException {
