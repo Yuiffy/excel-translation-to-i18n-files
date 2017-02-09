@@ -17,8 +17,10 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.*;
-import java.nio.file.Files;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -115,8 +117,16 @@ public class FileConvertService {
         for (int i = 1; i < tableHolders.size(); i++)
             tableHolder.merge(tableHolders.get(i));
         Map<String, String> textMap = excelToOthersMap(tableHolder, template, stringPrefix, stringSuffix, escaper, languageLimit);
-        ByteArrayOutputStream ret = mapToZip(textMap, outputFileNamePrefix, "." + escaper.getFileExtension(), languageLimit);
-        return ret;
+
+        ByteArrayOutputStream bo = new ByteArrayOutputStream();
+        ZipOutputStream zipOut = new ZipOutputStream(bo);
+        mapToZip(zipOut,textMap, outputFileNamePrefix, "." + escaper.getFileExtension(), languageLimit);
+
+        zipOut.putNextEntry(new ZipEntry("merged.xls"));
+        tableHolder.write(zipOut);
+        zipOut.closeEntry();
+        zipOut.close();
+        return bo;
     }
 
     public ByteArrayOutputStream excelToOtherZip(List<TableHolder> tableHolders, String template, String stringPrefix, String stringSuffix, FileType escapeType, String outputFileNamePrefix, Set<String> languageLimit) throws IOException, InvalidFormatException {
@@ -124,10 +134,7 @@ public class FileConvertService {
         return excelToOtherZip(tableHolders, template, stringPrefix, stringSuffix, escaper, outputFileNamePrefix, languageLimit);
     }
 
-
-    public ByteArrayOutputStream mapToZip(Map<String, String> textMap, String outputFileNamePrefix, String outputFileNameSuffix, Set<String> keyLimit) throws IOException, InvalidFormatException {
-        ByteArrayOutputStream bo = new ByteArrayOutputStream();
-        ZipOutputStream zipOut = new ZipOutputStream(bo);
+    public void mapToZip(ZipOutputStream zipOut, Map<String, String> textMap, String outputFileNamePrefix, String outputFileNameSuffix, Set<String> keyLimit) throws IOException, InvalidFormatException {
         Set<String> nameSet = new HashSet<>();
         for (Map.Entry<String, String> entry : textMap.entrySet()) {
             String lang = entry.getKey();
@@ -143,6 +150,12 @@ public class FileConvertService {
             zipOut.closeEntry();
             System.out.println("zip File finish:" + outputFileName);
         }
+    }
+
+        public ByteArrayOutputStream mapToZip(Map<String, String> textMap, String outputFileNamePrefix, String outputFileNameSuffix, Set<String> keyLimit) throws IOException, InvalidFormatException {
+        ByteArrayOutputStream bo = new ByteArrayOutputStream();
+        ZipOutputStream zipOut = new ZipOutputStream(bo);
+        mapToZip(zipOut,textMap,outputFileNamePrefix,outputFileNameSuffix,keyLimit);
         zipOut.close();
         return bo;
     }

@@ -1,7 +1,5 @@
 package com.dyf.i18n.util.escaper;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 

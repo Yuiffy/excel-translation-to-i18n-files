@@ -3,7 +3,6 @@ package com.dyf.i18n.util;
 import com.dyf.i18n.util.escaper.Escaper;
 import com.dyf.i18n.util.escaper.JsonEscaper;
 import com.dyf.i18n.util.escaper.XmlEscaper;
-import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.util.*;
 
