@@ -1,6 +1,6 @@
 package com.dyf.i18n.util.escaper;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 
 /**
  * Created by yuiff on 2017/1/11.

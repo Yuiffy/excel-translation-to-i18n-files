@@ -12,6 +12,14 @@ public class JsonFileHandler implements KeyValueFileHandler {
     JSONObject json;
     Map<String, JsonItemSaver> kvMap;
 
+    public JsonFileHandler(String jsonString) {
+        this.json = JSONObject.fromObject(jsonString);
+        this.kvMap = new HashMap<>();
+        dfsJson(json);
+        dfsJson(json);
+    }
+
+
     private void dfsJson(JSONObject json) {
         dfsJSONObject("", json);
     }
@@ -55,13 +63,6 @@ public class JsonFileHandler implements KeyValueFileHandler {
         }
     }
 
-    public JsonFileHandler(String jsonString) {
-        this.json = JSONObject.fromObject(jsonString);
-        this.kvMap = new HashMap<>();
-        dfsJson(json);
-        dfsJson(json);
-    }
-
     @Override
     public List<String> getKeyList() {
         List<String> keyList = new ArrayList<>(kvMap.keySet());
@@ -70,7 +71,7 @@ public class JsonFileHandler implements KeyValueFileHandler {
 
     @Override
     public Map<String, String> getKeyValueMap() {
-        Map<String,String> keyValueMap = new HashMap<>();
+        Map<String, String> keyValueMap = new HashMap<>();
         for (Map.Entry<String, JsonItemSaver> entry : this.kvMap.entrySet()) {
             keyValueMap.put(entry.getKey(), entry.getValue().get());
         }
@@ -102,7 +103,7 @@ public class JsonFileHandler implements KeyValueFileHandler {
 
         @Override
         public String get() {
-            return (String)inner.getValue();
+            return (String) inner.getValue();
         }
 
         @Override

@@ -2,6 +2,8 @@ package com.dyf.i18n.service;
 
 import com.dyf.i18n.file.KeyValueFileHandler;
 import com.dyf.i18n.file.XmlFileHandler;
+import com.dyf.i18n.file.JsonFileHandler;
+import com.dyf.i18n.file.XmlFileHandler;
 import com.dyf.i18n.replace.NormalReplacer;
 import com.dyf.i18n.replace.Replacer;
 import com.dyf.i18n.replace.template.NormalTemplateHolder;
@@ -85,13 +87,13 @@ public class FileConvertService {
         return replacer.doReplace(template);
     }
 
-    public void ManyXmlToOneExcelFile(List<File> xmlFiles, OutputStream excelOutputStream) throws IOException, SAXException, ParserConfigurationException {
+    public void ManyXmlToOneExcelFile(List<File> files, OutputStream excelOutputStream) throws IOException, SAXException, ParserConfigurationException {
         TableHolder excelHolder = new ExcelTableHolder();
-        XmlFileHandler firstXmlHandler = new XmlFileHandler(xmlFiles.get(0));
+        KeyValueFileHandler firstXmlHandler = new XmlFileHandler(files.get(0));
         List<String> keyList = firstXmlHandler.getKeyList();
         excelHolder.setColumn("string_id", keyList, 0);
-        for (int i = 0; i < xmlFiles.size(); i++) {
-            File file = xmlFiles.get(i);
+        for (int i = 0; i < files.size(); i++) {
+            File file = files.get(i);
             KeyValueFileHandler xmlHandler = new XmlFileHandler(file);
             Map<String, String> kvMap = xmlHandler.getKeyValueMap();
             excelHolder.addColumn(file.getName(), kvMap, 0);
