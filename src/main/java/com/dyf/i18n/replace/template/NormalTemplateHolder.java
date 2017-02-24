@@ -73,7 +73,7 @@ public class NormalTemplateHolder implements TemplateHolder {
                         tableHolder.getColStringWithOutFirstRow(colNum)
                 ), prefix, suffix);
         Map<String, String> kvMap = ListStringUtil.list2map(keyList, valueList);
-
+//        System.out.println(kvMap);
         replacer.reset(kvMap);
         String outputString = replacer.doReplace(template);
         return outputString;

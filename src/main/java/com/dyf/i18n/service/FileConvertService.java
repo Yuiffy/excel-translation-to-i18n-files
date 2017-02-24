@@ -249,8 +249,7 @@ public class FileConvertService {
         if (titleChangeLog != null) titleChangeLog.putAll(tempTitleChangeLog);
     }
 
-    public ByteArrayOutputStream buildTable(TableHolder tableHolder, Set<String> colNameSet, List<Map<String, String>> cellMapList) throws IOException {
-        List<String> colNames = new ArrayList<String>(colNameSet);
+    public ByteArrayOutputStream buildTable(TableHolder tableHolder, List<String> colNames, List<Map<String, String>> cellMapList) throws IOException {
         Map<String, Integer> nameIndexMap = new HashMap<>();
         for (Integer i = 0; i < colNames.size(); i++) {
             nameIndexMap.put(colNames.get(i), i);
@@ -262,9 +261,9 @@ public class FileConvertService {
             List<String> row = new ArrayList<>(colNames.size());
             for (Map.Entry<String, String> entry : colCellMap.entrySet()) {
                 String colName = entry.getKey();
-                Integer colIndex = nameIndexMap.get(nameIndexMap);
+                Integer colIndex = nameIndexMap.get(colName);
                 String CellValue = entry.getValue();
-                row.set(colIndex, CellValue);
+                row.add(colIndex, CellValue);
             }
             tableHolder.addRow(row);
         }

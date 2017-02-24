@@ -5,6 +5,8 @@ import com.dyf.i18n.file.KeyValueFileHandler;
 import com.dyf.i18n.service.FileConvertService;
 import com.dyf.i18n.table.ExcelTableHolder;
 import com.dyf.i18n.util.FileType;
+import com.dyf.i18n.util.escaper.SimpleJsonEscaper;
+import com.dyf.i18n.util.escaper.XmlEscaper;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import java.io.File;
@@ -19,9 +21,10 @@ public class MainExcelToOthers {
     //convert table to many files like timplate
     public static void main(String[] args) throws Exception {
 //        excel2xmls();
-            excel2jsons_map();
+//            excel2jsons_map();
 //        excel2jsons_map_limit_language();
 //        jsonHand();
+        excel2xml_map();
     }
 
     public static void jsonHand() throws IOException {
@@ -29,6 +32,7 @@ public class MainExcelToOthers {
         String json = new String(Files.readAllBytes(Paths.get(templateFilenameString)));
         KeyValueFileHandler handler = new JsonFileHandler(json);
     }
+
     public static void excel2jsons_map() throws IOException, InvalidFormatException {
         final String excelDirString = "./workfiles/excel2others/excelinput/";
         final String templateFilenameString = "./workfiles/excel2others/templateinput/template.json";
@@ -51,7 +55,7 @@ public class MainExcelToOthers {
             Map<String, String> temp =
                     fileCon.excelToOthersMap(new ExcelTableHolder(xlsfile),
                             new String(Files.readAllBytes(Paths.get(templateFilenameString))),
-                            stringPrefix, stringSuffix, FileType.json);
+                            stringPrefix, stringSuffix, new SimpleJsonEscaper(),null);
             all.putAll(temp);
             String outputDir = outputDirString + xlsfile.getName() + "/";
             new File(outputDir).mkdirs();
@@ -107,29 +111,44 @@ public class MainExcelToOthers {
         }
 //        System.out.println(all);
     }
-//
-//    public static void excel2xmls() throws IOException, InvalidFormatException {
-//        final String excelDirString = "./workfiles/excel2others/excelinput/";
-//        final String templateFilenameString = "./workfiles/excel2others/templateinput/template.xml";
-//        final String outputDirString = "./workfiles/excel2others/outputFiles_xml/";
-//        final String stringPrefix = ">";
-//        final String stringSuffix = "</string>";
-//
-//        FileConvertService fileCon = new FileConvertService();
-//        File excelDir = new File(excelDirString);
-//        File[] excelFiles = excelDir.listFiles(new FilenameFilter() {
-//            @Override
-//            public boolean accept(File dir, String name) {
-//                return name.endsWith(".xls");
-//            }
-//        });
-//        if (excelFiles == null) System.out.println(excelDir.getAbsolutePath() + " have not .xls files in it!");
-//        for (File xlsfile : excelFiles) {
-//            System.out.println(xlsfile);
-//            fileCon.excelToOtherAndOutputToFile(new ExcelTableHolder(xlsfile),
-//                    new File(templateFilenameString),
-//                    outputDirString + xlsfile.getName() + "/",
-//                    stringPrefix, stringSuffix, FileType.xml);
-//        }
-//    }
+
+    public static void excel2xml_map() throws IOException, InvalidFormatException {
+        final String excelDirString = "./workfiles/excel2others/excelinput/";
+        final String templateFilenameString = "./workfiles/excel2others/templateinput/template.xml";
+        final String outputDirString = "./workfiles/excel2others/outputFiles_xml/";
+        final String stringPrefix = ">";
+        final String stringSuffix = "</string>";
+
+        FileConvertService fileCon = new FileConvertService();
+        File excelDir = new File(excelDirString);
+        File[] excelFiles = excelDir.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.endsWith(".xls");
+            }
+        });
+        if (excelFiles == null) System.out.println(excelDir.getAbsolutePath() + " have not .xls files in it!");
+        Map<String, String> all = new HashMap<>();
+        for (File xlsfile : excelFiles) {
+            System.out.println(xlsfile);
+            String str = new String(Files.readAllBytes(Paths.get(templateFilenameString)), "UTF-8");
+            Map<String, String> temp =
+                    fileCon.excelToOthersMap(new ExcelTableHolder(xlsfile), str,
+                            stringPrefix, stringSuffix, new SimpleJsonEscaper(), null);
+            all.putAll(temp);
+            String outputDir = outputDirString + xlsfile.getName() + "/";
+            new File(outputDir).mkdirs();
+            for (Map.Entry<String, String> entry : temp.entrySet()) {
+                String lang = entry.getKey();
+                String outputFileName = fileCon.getOutputFileName(new File(templateFilenameString).getName(), outputDir, lang);
+                try (PrintWriter out = new PrintWriter(outputFileName)) {
+                    out.println(entry.getValue());
+                }
+                System.out.println("output File finish:" + outputFileName);
+            }
+        }
+//        System.out.println(all);
+    }
+
+
 }

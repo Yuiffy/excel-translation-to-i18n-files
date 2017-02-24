@@ -55,4 +55,15 @@ public class ListStringUtil {
             System.out.println("key value list not same size: " + keyList.size() + "," + valueList.size());
         return ret;
     }
+
+    static public <K,V> Map<K, V> array2map(K[] keyList, V[] valueList) {
+        Map<K, V> ret = new HashMap<>();
+        int i;
+        for(i=0; i<keyList.length && i<valueList.length; i++){
+            ret.put(keyList[i], valueList[i]);
+        }
+        if (i<keyList.length || i<valueList.length)
+            System.out.println("key value list not same size: " + keyList.length + "," + valueList.length);
+        return ret;
+    }
 }
