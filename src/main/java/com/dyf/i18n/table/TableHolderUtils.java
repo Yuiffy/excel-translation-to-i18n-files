@@ -6,7 +6,7 @@ import java.util.List;
  * Created by yuiff on 2017/2/10.
  */
 public class TableHolderUtils {
-    public static TableHolder mergeAll(List<TableHolder> tableHolders){
+    public static TableHolder mergeAll(List<TableHolder> tableHolders) {
         TableHolder tableHolder = null;
         if (tableHolders != null && tableHolders.size() != 0) {
             tableHolder = tableHolders.get(0);

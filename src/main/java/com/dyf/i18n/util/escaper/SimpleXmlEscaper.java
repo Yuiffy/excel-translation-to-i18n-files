@@ -13,11 +13,11 @@ public class SimpleXmlEscaper extends AbstractEscaper implements Escaper {
     Replacer escapeReplacer;
     Replacer unescapeReplacer;
 
-    public SimpleXmlEscaper(){
-        final String[] before = {"<","&",">"};
-        final String[] after = {"&lt;","&amp;","&gt;"};
-        this.escapeReplacer = new QuickReplacer(ListStringUtil.array2map(before,after));
-        this.unescapeReplacer = new QuickReplacer(ListStringUtil.array2map(after,before));
+    public SimpleXmlEscaper() {
+        final String[] before = {"<", "&", ">"};
+        final String[] after = {"&lt;", "&amp;", "&gt;"};
+        this.escapeReplacer = new QuickReplacer(ListStringUtil.array2map(before, after));
+        this.unescapeReplacer = new QuickReplacer(ListStringUtil.array2map(after, before));
     }
 
     @Override

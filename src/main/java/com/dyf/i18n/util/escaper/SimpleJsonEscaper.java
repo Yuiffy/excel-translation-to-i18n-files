@@ -4,10 +4,6 @@ import com.dyf.i18n.replace.QuickReplacer;
 import com.dyf.i18n.replace.Replacer;
 import com.dyf.i18n.util.FileType;
 import com.dyf.i18n.util.ListStringUtil;
-import org.apache.commons.lang.StringEscapeUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by yuiff on 2017/1/11.
@@ -17,11 +13,11 @@ public class SimpleJsonEscaper extends AbstractEscaper implements Escaper {
     Replacer escapeReplacer;
     Replacer unescapeReplacer;
 
-    public SimpleJsonEscaper(){
-        final String[] before = {"\\","\"","\b","\t","\n","\f","\r"};
-        final String[] after = {"\\\\","\\\"","\\b","\\t","\\n","\\f","\\r"};
-        this.escapeReplacer = new QuickReplacer(ListStringUtil.array2map(before,after));
-        this.unescapeReplacer = new QuickReplacer(ListStringUtil.array2map(after,before));
+    public SimpleJsonEscaper() {
+        final String[] before = {"\\", "\"", "\b", "\t", "\n", "\f", "\r"};
+        final String[] after = {"\\\\", "\\\"", "\\b", "\\t", "\\n", "\\f", "\\r"};
+        this.escapeReplacer = new QuickReplacer(ListStringUtil.array2map(before, after));
+        this.unescapeReplacer = new QuickReplacer(ListStringUtil.array2map(after, before));
     }
 
     @Override

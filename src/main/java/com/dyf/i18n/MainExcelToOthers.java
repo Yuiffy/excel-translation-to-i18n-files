@@ -6,7 +6,6 @@ import com.dyf.i18n.service.FileConvertService;
 import com.dyf.i18n.table.ExcelTableHolder;
 import com.dyf.i18n.util.FileType;
 import com.dyf.i18n.util.escaper.SimpleJsonEscaper;
-import com.dyf.i18n.util.escaper.XmlEscaper;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import java.io.File;
@@ -55,7 +54,7 @@ public class MainExcelToOthers {
             Map<String, String> temp =
                     fileCon.excelToOthersMap(new ExcelTableHolder(xlsfile),
                             new String(Files.readAllBytes(Paths.get(templateFilenameString))),
-                            stringPrefix, stringSuffix, new SimpleJsonEscaper(),null);
+                            stringPrefix, stringSuffix, new SimpleJsonEscaper(), null);
             all.putAll(temp);
             String outputDir = outputDirString + xlsfile.getName() + "/";
             new File(outputDir).mkdirs();
