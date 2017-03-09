@@ -66,4 +66,10 @@ public class ListStringUtil {
             System.out.println("key value list not same size: " + keyList.length + "," + valueList.length);
         return ret;
     }
+
+    static public boolean isLookLikeEmpty(String s){
+        if(s==null || s.isEmpty())return true;
+        if(s.trim().isEmpty())return true;
+        return false;
+    }
 }
