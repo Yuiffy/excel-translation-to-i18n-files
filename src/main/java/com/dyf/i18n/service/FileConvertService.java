@@ -51,6 +51,7 @@ public class FileConvertService {
         return replacer.doReplace(template);
     }
 
+    // many language json/xml file, to one excel file with many columns, every column mean one language
     public void manyOtherToOneExcelFile(List<String> files, List<String> filesName, FileType fileType, OutputStream excelOutputStream) throws IOException, SAXException, ParserConfigurationException {
         TableHolder excelHolder = new ExcelTableHolder();
         KeyValueFileHandler firstXmlHandler = FileHandlerFactory.createHandler(files.get(0), fileType);
@@ -63,6 +64,24 @@ public class FileConvertService {
 //            System.out.println(kvMap);
             excelHolder.addColumn(filesName.get(i), kvMap, 0);
         }
+        excelHolder.write(excelOutputStream);
+    }
+
+    //many json/xml, get the translate values of them, list in the first column of excel
+    public void manyEnglishToOneExcelFile(List<String> files, String columnName, FileType fileType, OutputStream excelOutputStream) throws IOException, SAXException, ParserConfigurationException {
+        List<String> valueStringList = new ArrayList<>();
+        for (int i = 0; i < files.size(); i++) {
+            String file = files.get(i);
+            KeyValueFileHandler keyValueHandler = FileHandlerFactory.createHandler(file, fileType);
+            Map<String, String> kvMap = keyValueHandler.getKeyValueMap();
+            List<String> keyList = keyValueHandler.getKeyList();
+            List<String> valueList = new ArrayList<>();
+            for (String key : keyList) {
+                valueStringList.add(kvMap.get(key));
+            }
+        }
+        TableHolder excelHolder = new ExcelTableHolder();
+        excelHolder.setColumn(columnName, valueStringList, 0);
         excelHolder.write(excelOutputStream);
     }
 

@@ -6,6 +6,8 @@ import com.dyf.i18n.service.FileConvertService;
 import com.dyf.i18n.util.FileType;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,8 +17,9 @@ import java.util.List;
 public class MainOtherToExcel {
 
     public static void main(String[] args) throws Exception {
-        main_xmls_to_excel();
-        mainJson2excel();
+//        main_xmls_to_excel();
+//        mainJson2excel();
+        mainEngJson2excel();
     }
 
     //collect many android xml i18n file to a table file
@@ -58,6 +61,32 @@ public class MainOtherToExcel {
         }
         OutputStream os = new FileOutputStream(outputDirString + "json_out_excel.xls");
         fileCon.manyOtherToOneExcelFile(Arrays.asList(inputFiles), FileType.json, os);
+    }
+
+    public static void mainEngJson2excel() throws Exception {
+        final String inputDirString = "./workfiles/json2excel/json_input/";
+        final String outputDirString = "./workfiles/json2excel/excel_output/";
+
+        FileConvertService fileCon = new FileConvertService();
+        File filesInputDir = new File(inputDirString);
+        File[] inputFiles = filesInputDir.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.endsWith(".json");
+            }
+        });
+        if (inputFiles == null || inputFiles.length == 0) {
+            System.out.println("No json files!");
+            return;
+        }
+        OutputStream os = new FileOutputStream(outputDirString + "json_out_excel.xls");
+//        fileCon.manyOtherToOneExcelFile(Arrays.asList(inputFiles), FileType.json, os);
+        List<String> fileListString = new ArrayList<>();
+        for (File file : inputFiles) {
+            String str = new String(Files.readAllBytes(file.toPath()), ("UTF-8"));
+            fileListString.add(str);
+        }
+        fileCon.manyEnglishToOneExcelFile(fileListString,"ENG",FileType.json,os);
     }
 
     //test xml read and write
