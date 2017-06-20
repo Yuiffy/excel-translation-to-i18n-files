@@ -1,25 +1,31 @@
 package com.dyf.i18n.util.escaper;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.dyf.i18n.util.FileType;
+import org.apache.commons.lang.StringEscapeUtils;
 
 /**
  * Created by yuiff on 2017/1/11.
  */
-public class XmlEscaper implements Escaper{
+public class XmlEscaper extends AbstractEscaper implements Escaper {
+    private static final String fileExtension = "xml";
+
     @Override
-    public List<String> escape(List<String> list) {
-        List<String> ret = new ArrayList<>(list.size());
-        list.forEach(item -> ret.add(StringEscapeUtils.escapeXml11(item)));
-        return ret;
+    public String escape(String str) {
+        return StringEscapeUtils.escapeXml(str);
     }
 
     @Override
-    public List<String> unescape(List<String> list) {
-        List<String> ret = new ArrayList<>(list.size());
-        list.forEach(item -> ret.add(StringEscapeUtils.unescapeXml(item)));
-        return ret;
+    public String unescape(String str) {
+        return StringEscapeUtils.unescapeXml(str);
+    }
+
+    @Override
+    public String getFileExtension() {
+        return XmlEscaper.fileExtension;
+    }
+
+    @Override
+    public FileType getFileType() {
+        return FileType.xml;
     }
 }

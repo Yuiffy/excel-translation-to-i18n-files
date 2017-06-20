@@ -1,6 +1,8 @@
 package com.dyf.i18n.util;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import com.dyf.i18n.util.escaper.Escaper;
+import com.dyf.i18n.util.escaper.JsonEscaper;
+import com.dyf.i18n.util.escaper.XmlEscaper;
 
 import java.util.*;
 
@@ -16,35 +18,33 @@ public class ListStringUtil {
         String pre = prefix == null ? "" : prefix;
         String suf = suffix == null ? "" : suffix;
         List<String> ret = new ArrayList<>(list.size());
-        list.forEach(item -> ret.add(prefix + item + suffix));
+        for (String item : list) {
+            ret.add(pre + item + suf);
+        }
         return ret;
     }
 
     static public List<String> escapeXml(List<String> list) {
-        List<String> ret = new ArrayList<>(list.size());
-        list.forEach(item -> ret.add(StringEscapeUtils.escapeXml11(item)));
-        return ret;
+        Escaper escaper = new XmlEscaper();
+        return escaper.escape(list);
     }
 
     static public List<String> unescapeXml(List<String> list) {
-        List<String> ret = new ArrayList<>(list.size());
-        list.forEach(item -> ret.add(StringEscapeUtils.unescapeXml(item)));
-        return ret;
+        Escaper escaper = new XmlEscaper();
+        return escaper.unescape(list);
     }
 
     static public List<String> escapeJson(List<String> list) {
-        List<String> ret = new ArrayList<>(list.size());
-        list.forEach(item -> ret.add(StringEscapeUtils.escapeJson(item)));
-        return ret;
+        Escaper escaper = new JsonEscaper();
+        return escaper.escape(list);
     }
 
     static public List<String> unescapeJson(List<String> list) {
-        List<String> ret = new ArrayList<>(list.size());
-        list.forEach(item -> ret.add(StringEscapeUtils.unescapeJson(item)));
-        return ret;
+        Escaper escaper = new JsonEscaper();
+        return escaper.unescape(list);
     }
 
-    static public <K,V> Map<K, V> list2map(List<K> keyList, List<V> valueList) {
+    static public <K, V> Map<K, V> list2map(List<K> keyList, List<V> valueList) {
         Iterator<K> i1 = keyList.iterator();
         Iterator<V> i2 = valueList.iterator();
         Map<K, V> ret = new HashMap<>();
@@ -54,5 +54,22 @@ public class ListStringUtil {
         if (i1.hasNext() || i2.hasNext())
             System.out.println("key value list not same size: " + keyList.size() + "," + valueList.size());
         return ret;
+    }
+
+    static public <K, V> Map<K, V> array2map(K[] keyList, V[] valueList) {
+        Map<K, V> ret = new HashMap<>();
+        int i;
+        for (i = 0; i < keyList.length && i < valueList.length; i++) {
+            ret.put(keyList[i], valueList[i]);
+        }
+        if (i < keyList.length || i < valueList.length)
+            System.out.println("key value list not same size: " + keyList.length + "," + valueList.length);
+        return ret;
+    }
+
+    static public boolean isLookLikeEmpty(String s){
+        if(s==null || s.isEmpty())return true;
+        if(s.trim().isEmpty())return true;
+        return false;
     }
 }

@@ -13,5 +13,9 @@
       "eaea_eaea": "oyaya"
     },
     "pig": "pig<&"
-  }
+  },
+  "aarraytest":[
+    {"doragon":"Doragon!"},
+    {"hello_world":"helloworld!"}
+  ]
 }
