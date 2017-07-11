@@ -2,6 +2,7 @@ package com.dyf.i18n;
 
 import com.dyf.i18n.file.JsonFileHandler;
 import com.dyf.i18n.file.KeyValueFileHandler;
+import com.dyf.i18n.replace.template.NormalTemplateHolder;
 import com.dyf.i18n.service.FileConvertService;
 import com.dyf.i18n.table.ExcelTableHolder;
 import com.dyf.i18n.util.FileType;
@@ -20,10 +21,10 @@ public class MainExcelToOthers {
     //convert table to many files like timplate
     public static void main(String[] args) throws Exception {
 //        excel2xmls();
-//            excel2jsons_map();
+            excel2jsons_map();
 //        excel2jsons_map_limit_language();
 //        jsonHand();
-        excel2xml_map();
+//        excel2xml_map();
     }
 
     public static void jsonHand() throws IOException {
@@ -51,10 +52,12 @@ public class MainExcelToOthers {
         Map<String, String> all = new HashMap<>();
         for (File xlsfile : excelFiles) {
             System.out.println(xlsfile);
+            final ExcelTableHolder excelTableHolder = new ExcelTableHolder(xlsfile);
+            final SimpleJsonEscaper simpleJsonEscaper = new SimpleJsonEscaper();
+            final String s = new String(Files.readAllBytes(Paths.get(templateFilenameString)));
             Map<String, String> temp =
-                    fileCon.excelToOthersMap(new ExcelTableHolder(xlsfile),
-                            new String(Files.readAllBytes(Paths.get(templateFilenameString))),
-                            stringPrefix, stringSuffix, new SimpleJsonEscaper(), null);
+                    fileCon.excelToOthersMap(
+                            null, new NormalTemplateHolder(excelTableHolder, simpleJsonEscaper, s, stringPrefix, stringSuffix));
             all.putAll(temp);
             String outputDir = outputDirString + xlsfile.getName() + "/";
             new File(outputDir).mkdirs();
@@ -131,9 +134,11 @@ public class MainExcelToOthers {
         for (File xlsfile : excelFiles) {
             System.out.println(xlsfile);
             String str = new String(Files.readAllBytes(Paths.get(templateFilenameString)), "UTF-8");
+            final ExcelTableHolder excelTableHolder = new ExcelTableHolder(xlsfile);
+            final SimpleJsonEscaper simpleJsonEscaper = new SimpleJsonEscaper();
             Map<String, String> temp =
-                    fileCon.excelToOthersMap(new ExcelTableHolder(xlsfile), str,
-                            stringPrefix, stringSuffix, new SimpleJsonEscaper(), null);
+                    fileCon.excelToOthersMap(
+                            null, new NormalTemplateHolder(excelTableHolder, simpleJsonEscaper, str, stringPrefix, stringSuffix));
             all.putAll(temp);
             String outputDir = outputDirString + xlsfile.getName() + "/";
             new File(outputDir).mkdirs();
