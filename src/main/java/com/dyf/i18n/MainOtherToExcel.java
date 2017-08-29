@@ -18,8 +18,8 @@ public class MainOtherToExcel {
 
     public static void main(String[] args) throws Exception {
 //        main_xmls_to_excel();
-//        mainJson2excel();
-        mainEngJson2excel();
+        mainJson2excel();
+//        mainEngJson2excel();
     }
 
     //collect many android xml i18n file to a table file
