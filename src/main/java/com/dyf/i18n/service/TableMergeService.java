@@ -2,11 +2,13 @@ package com.dyf.i18n.service;
 
 import com.dyf.i18n.table.ExcelTableHolder;
 import com.dyf.i18n.table.TableHolder;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -93,11 +95,11 @@ public class TableMergeService {
         zipOut.closeEntry();
 
         zipOut.putNextEntry(new ZipEntry("tip_engNotInMainTable.xls"));
-        languageNotInHolder.write(zipOut);
+        keyNotInHolder.write(zipOut);
         zipOut.closeEntry();
 
         zipOut.putNextEntry(new ZipEntry("tip_languageNotInMainTable.xls"));
-        keyNotInHolder.write(zipOut);
+        languageNotInHolder.write(zipOut);
         zipOut.closeEntry();
 
         zipOut.close();
