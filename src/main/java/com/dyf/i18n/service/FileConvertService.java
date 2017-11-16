@@ -283,7 +283,7 @@ public class FileConvertService {
             //TODO:因为有Sports,Sport就没加进去；因为有option，Option就没加进去；待修改
             if (fakeMap.containsKey(fakeTitle)) {
                 Integer repeatIndex = fakeMap.get(fakeTitle);
-                System.out.println("fake title repeat! I will only handle the first, won't add " + i + " : " + rowTitles.get(i) +
+                System.out.println("fake title repeat! I will only add the first into fakeMap, won't add " + i + " : " + rowTitles.get(i) +
                         "\t" + repeatIndex + " : " + rowTitles.get(repeatIndex));
             } else
                 fakeMap.put(fakeRowTitles.get(i), i);
